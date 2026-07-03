@@ -1,0 +1,73 @@
+from vpython import *
+import numpy as np 
+clockR = 1
+clockT = clockR/10
+majortickL = clockR/7
+majortickW = 2*np.pi*clockR/500
+majortickT = clockT*1.2
+minorTickL = clockR/12
+minorTickW = 2*np.pi*clockR/200
+minorTickT = clockT*0.2
+minutehandL = 0.9*clockR
+minutehandT = minutehandL/20
+minutehandOffset = clockT/2 + minutehandT
+sechandL = 0.4*clockR
+sechandT = minutehandL/10
+hourhandL = 0.6*clockR
+hourhandT = minutehandT*1.5
+hourhandOffset = clockT + hourhandT
+
+hourangle =0 
+minangle =0 
+secangle = 0
+secInc = 0.05
+minInc = 0.001
+hourInc= minInc/60
+
+for theta in np.linspace(0, 2*np.pi, 13):
+
+    # Skip major tick positions
+    majorTick = box(axis = vector(clockR*np.cos (theta),clockR*np.sin(theta),clockT/2),length =majortickL/2 ,width =majortickW ,height = majortickT, color= color.white, pos = vector((clockR-majortickL/2)*np.cos(theta),(clockR-majortickL/2)*np.sin(theta),0))
+for theta in np.linspace(0, 2*np.pi, 60, endpoint=False):
+
+    # Skip major tick positions
+    if np.isclose(theta % (np.pi/6), 0):
+        continue
+
+    # Skip major tick positions
+    
+    
+    minorTick = box(axis = vector(clockR*np.cos (theta),clockR*np.sin(theta),0),length =minorTickL/2 ,width =minorTickW ,height =  minorTickT, color= color.black, pos = vector((clockR-minorTickL/2)*np.cos(theta),(clockR-minorTickL/2)*np.sin(theta),0))    
+clockface = cylinder(color = vector(0,1,0.8), axis= vector(0,0,0.01), Length = clockT, radius = clockR, pos = vector(0,0,-clockT/2  ))
+Xarrow = arrow( axis = vector(0.7,0,0),color = color.red , Length = minutehandL/3, shaftwidth = minutehandT/5)
+Yarrow = arrow( axis = vector(0,0.9,0),color = color.green , Length = hourhandL/2, shaftwidth = hourhandT/2)
+Zarrow = arrow( axis = vector(0,.6,0),color = color.yellow , Length = sechandL/5, shaftwidth = sechandT/10)
+
+
+mysphere = cylinder(color = color.white,  length =0.01, radius = clockT/2,  axis = vector (0,0,1),pos = vector(0,0,0) )
+
+while True:
+    rate(500)
+    minangle -= minInc
+    secangle -= secInc
+    hourangle = secangle/12
+    secangle = minangle/60
+
+    Xarrow.axis = vector(
+        minutehandL*np.cos(minangle),
+        minutehandL*np.sin(minangle),
+        0
+    )
+
+    Yarrow.axis = vector(
+        sechandL*np.cos(hourangle),
+        sechandL*np.sin(hourangle),
+        0
+    )
+    Zarrow.axis = vector(
+        minutehandL*np.cos(secangle),
+        minutehandL*np.sin(secangle),
+        0
+    )
+
+        
